@@ -120,8 +120,10 @@ maybeAddRecord(Record record) throws IOException {
 				      " does not match zone origin " +
 				      origin);
 	}
-	if (name.subdomain(origin))
-		addRecord(record);
+	if (name.subdomain(origin)) {
+
+		addRecord(record);	
+	}
 }
 
 /**
@@ -247,6 +249,7 @@ oneRRset(Object types, int type) {
 	if (type == Type.ANY)
 		throw new IllegalArgumentException("oneRRset(ANY)");
 	if (types instanceof List) {
+
 		List list = (List) types;
 		for (int i = 0; i < list.size(); i++) {
 			RRset set = (RRset) list.get(i);
@@ -254,7 +257,9 @@ oneRRset(Object types, int type) {
 				return set;
 		}
 	} else {
+		
 		RRset set = (RRset) types;
+		
 		if (set.getType() == type)
 			return set;
 	}
@@ -304,11 +309,15 @@ addRRset(Name name, RRset rrset) {
 
 private synchronized void
 removeRRset(Name name, int type) {
+	
 	Object types = data.get(name);
+	
 	if (types == null) {
+		
 		return;
 	}
 	if (types instanceof List) {
+		
 		List list = (List) types;
 		for (int i = 0; i < list.size(); i++) {
 			RRset set = (RRset) list.get(i);
@@ -320,6 +329,7 @@ removeRRset(Name name, int type) {
 			}
 		}
 	} else {
+		
 		RRset set = (RRset) types;
 		if (set.getType() != type)
 			return;
@@ -386,6 +396,7 @@ lookup(Name name, int type) {
 				sr.addRRset(rrset);
 				return sr;
 			}
+
 			rrset = oneRRset(types, Type.CNAME);
 			if (rrset != null)
 				return new SetResponse(SetResponse.CNAME,
@@ -416,6 +427,13 @@ lookup(Name name, int type) {
 				sr.addRRset(rrset);
 				return sr;
 			}
+			
+			/* Modified by mohamad zeinali mohammad.basu@gmail.com */
+			rrset = oneRRset(types, Type.CNAME);
+			if (rrset != null)
+				return new SetResponse(SetResponse.CNAME,
+						       rrset);
+			/* */
 		}
 	}
 
@@ -499,6 +517,7 @@ removeRecord(Record r) {
 			rrset.deleteRR(r);
 	}
 }
+
 
 /**
  * Returns an Iterator over the RRsets in the zone.
